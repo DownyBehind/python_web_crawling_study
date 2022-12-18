@@ -1,6 +1,7 @@
 from requests import get
 from bs4 import BeautifulSoup
 
+
 def extract_wwr_jobs(keyword):
 
   base_url = "https://weworkremotely.com/remote-jobs/search?utf8=%E2%9C%93&term="
@@ -12,10 +13,10 @@ def extract_wwr_jobs(keyword):
   else:
 
     results = []
-  
+
     #print(response.text)
-    soup = BeautifulSoup(response.text,"html.parser")
-    jobs = soup.find_all('section',class_="jobs")
+    soup = BeautifulSoup(response.text, "html.parser")
+    jobs = soup.find_all('section', class_="jobs")
     for job_section in jobs:
       job_posts = job_section.find_all('li')
       job_posts.pop(-1)
@@ -23,12 +24,13 @@ def extract_wwr_jobs(keyword):
         anchors = post.find_all('a')
         anchor = anchors[1]
         link = anchor['href']
-        company, kind, region = anchor.find_all('span',class_="company")
+        company, kind, region = anchor.find_all('span', class_="company")
         title = anchor.find('span', class_='title')
         #print(company.string, kind.string, region.string, title.string)
         #print('/////////////////////////////')
         #print('/////////////////////////////')
         job_data = {
+          'link': f'https://weworkremotely.com{link}',
           'company': company.string,
           'region': region.string,
           'position': title.string
@@ -36,4 +38,3 @@ def extract_wwr_jobs(keyword):
         results.append(job_data)
     #print(results)
     return results
-    
